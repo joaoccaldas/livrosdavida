@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lulu's Library</title> 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 transition-colors duration-500">
+
+    <div id="app-header" class="fixed top-0 left-0 right-0 p-3 sm:p-4 z-50 flex justify-between items-center w-full">
+        <div class="flex items-center">
+            <label for="theme-toggle" class="mr-2 text-sm font-medium theme-text">Theme:</label>
+            <button id="theme-toggle-btn" class="px-3 py-1.5 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 theme-toggle-button">
+                <span id="theme-toggle-icon">☀️</span> <span id="theme-toggle-text">Normal</span>
+            </button>
+        </div>
+
+        <div id="username-display-container" class="flex items-center space-x-2 text-right">
+            <span id="username-text" class="font-medium username-display-text"></span>
+            <button id="change-username-btn" class="text-sm underline change-username-link hidden">Change Name</button>
+        </div>
+    </div>
+
+
+    <div id="landing-page" class="w-full max-w-5xl text-center pt-20 sm:pt-24"> <div id="username-prompt" class="mb-8 p-6 bg-card rounded-lg shadow-lg">
+            <h1 class="text-3xl font-bold mb-4 text-text-primary">Welcome!</h1>
+            <p class="text-text-secondary mb-4">Please enter your name to personalize your experience.</p>
+            <input type="text" id="username-input" placeholder="Your Name" class="w-full max-w-md p-3 border input-border rounded-lg shadow-sm focus:ring-2 focus:ring-accent focus:border-accent bg-input text-input-text">
+            <button id="save-username-btn" class="mt-4 px-6 py-3 bg-accent text-accent-foreground font-semibold rounded-lg shadow-md hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 transition duration-150">Save Name</button>
+        </div>
+
+        <div id="main-content" class="hidden">
+            <div class="flex items-center justify-center mb-2">
+                <h1 id="page-main-title" class="text-4xl font-bold text-text-primary page-title-text"></h1>
+                <button id="edit-page-title-btn" title="Edit Library Name" class="ml-2 text-xl text-accent hover:text-accent-hover hidden">✏️</button>
+            </div>
+            <p id="welcome-user-message" class="text-xl text-text-secondary mb-8"></p>
+            
+            <div id="books-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                </div>
+            <p id="no-books-message" class="text-text-secondary text-lg hidden">Your bookshelf is empty. Click the '+' button to create your first book!</p>
+
+            <button id="add-book-btn" title="Create New Book" class="fixed bottom-8 right-8 w-16 h-16 bg-accent text-accent-foreground rounded-full shadow-xl hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-75 flex items-center justify-center text-3xl transition transform hover:scale-110 add-book-button-style">
+                +
+            </button>
+        </div>
+    </div>
+
+    <div id="book-creation-modal" class="fixed inset-0 modal-overlay items-center justify-center p-4 hidden z-[60]">
+        <div class="bg-card p-6 sm:p-8 rounded-lg shadow-2xl w-full max-w-lg modal-content overflow-y-auto text-text-primary">
+            <div id="modal-step-1">
+                <h2 class="text-2xl font-bold mb-6 modal-title-text">Create New Book</h2>
+                <div class="mb-4">
+                    <label for="book-title-input" class="block text-sm font-medium mb-1">Book Title</label>
+                    <input type="text" id="book-title-input" placeholder="e.g., My Awesome Story" class="w-full p-3 border input-border rounded-lg shadow-sm focus:ring-2 focus:ring-accent focus:border-accent bg-input text-input-text">
+                </div>
+                <div class="mb-6">
+                    <label for="num-pages-input" class="block text-sm font-medium mb-1">Number of Pages (including cover)</label>
+                    <input type="number" id="num-pages-input" placeholder="e.g., 10" min="1" class="w-full p-3 border input-border rounded-lg shadow-sm focus:ring-2 focus:ring-accent focus:border-accent bg-input text-input-text">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button id="cancel-creation-btn" class="px-5 py-2 bg-muted text-muted-foreground font-medium rounded-lg hover:bg-muted-hover transition">Cancel</button>
+                    <button id="next-step-btn" class="px-5 py-2 bg-accent text-accent-foreground font-semibold rounded-lg hover:bg-accent-hover transition">Next</button>
+                </div>
+            </div>
+
+            <div id="modal-step-2" class="hidden">
+                <h2 class="text-2xl font-bold mb-1 modal-title-text">Add Page Content</h2>
+                <p id="current-page-editor-label" class="text-sm text-text-secondary mb-4">Editing Page 1 (Cover)</p>
+                
+                <div id="page-content-inputs" class="space-y-4 mb-6">
+                    <div id="cover-image-input-container" class="hidden">
+                        <label for="cover-image-url-input" class="block text-sm font-medium mb-1">Cover Image URL (Optional)</label>
+                        <input type="url" id="cover-image-url-input" placeholder="https://example.com/image.jpg" class="w-full p-3 border input-border rounded-lg shadow-sm focus:ring-2 focus:ring-accent focus:border-accent bg-input text-input-text">
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                     <button id="prev-page-editor-btn" class="px-5 py-2 bg-muted text-muted-foreground font-medium rounded-lg hover:bg-muted-hover transition disabled:opacity-50" disabled>Previous Page</button>
+                    <span id="page-editor-indicator" class="text-sm text-text-secondary"></span>
+                    <button id="next-page-editor-btn" class="px-5 py-2 bg-muted text-muted-foreground font-medium rounded-lg hover:bg-muted-hover transition">Next Page</button>
+                </div>
+                 <div class="flex justify-end space-x-3 mt-6">
+                    <button id="back-to-step1-btn" class="px-5 py-2 bg-muted text-muted-foreground font-medium rounded-lg hover:bg-muted-hover transition">Back</button>
+                    <button id="save-book-btn" class="px-5 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">Save Book</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="book-reader-container" class="fixed inset-0 bg-reader-overlay items-center justify-center hidden z-[70] backdrop-blur-sm">
+        <div id="book-reader" class="book hidden items-center justify-center relative">
+            <div id="left-page" class="page left relative page-bg page-text">
+                <div class="page-content prose lg:prose-xl"></div>
+                <div class="turn-corner prev" id="turn-prev"></div>
+            </div>
+            <div id="right-page" class="page right relative page-bg page-text">
+                <div class="page-content prose lg:prose-xl"></div>
+                <div class="turn-corner next" id="turn-next"></div>
+            </div>
+        </div>
+        <button id="close-book-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white text-3xl sm:text-4xl font-bold hover:text-gray-300 transition z-[80] close-book-button-style">&times;</button>
+    </div>
+
+    <script src="script.js" defer></script> 
+</body>
+</html>
